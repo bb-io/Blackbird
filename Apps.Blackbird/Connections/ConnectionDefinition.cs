@@ -1,7 +1,8 @@
-﻿using Blackbird.Applications.Sdk.Common.Authentication;
+﻿using Apps.Blackbird.Constants;
+using Blackbird.Applications.Sdk.Common.Authentication;
 using Blackbird.Applications.Sdk.Common.Connections;
 
-namespace Apps.App.Connections;
+namespace Apps.Blackbird.Connections;
 
 public class ConnectionDefinition : IConnectionDefinition
 {
@@ -14,6 +15,8 @@ public class ConnectionDefinition : IConnectionDefinition
             ConnectionUsage = ConnectionUsage.Actions,
             ConnectionProperties = new List<ConnectionProperty>
             {
+                new(CredsNames.Url) { DisplayName = "URL" },
+                new(CredsNames.ApiToken) { DisplayName = "API token", Sensitive = true }
             }
         }
     };
