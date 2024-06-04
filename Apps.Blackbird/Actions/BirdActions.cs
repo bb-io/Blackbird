@@ -12,6 +12,7 @@ using RestSharp;
 
 namespace Apps.Blackbird.Actions;
 
+[ActionList]
 public class BirdActions : BlackbirdAppInvocable
 {
     public BirdActions(InvocationContext invocationContext) : base(invocationContext)
@@ -37,5 +38,12 @@ public class BirdActions : BlackbirdAppInvocable
     {
         var request = new BlackbirdAppRequest($"nests/{bird.NestId}/birds/{bird.BirdId}", Method.Get, Creds);
         return Client.ExecuteWithErrorHandling<BirdEntity>(request);
+    }   
+    
+    [Action("Start bird", Description = "Start specific published bird")]
+    public Task StartBird([ActionParameter] BirdRequest bird)
+    {
+        var request = new BlackbirdAppRequest($"nests/{bird.NestId}/birds/{bird.BirdId}", Method.Post, Creds);
+        return Client.ExecuteWithErrorHandling(request);
     }
 }

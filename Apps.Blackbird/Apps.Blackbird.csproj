@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Product>Blackbird</Product>
-        <Description>Blackbird API</Description>
+        <Description>Respond to changes in birds and flights or trigger new flights.</Description>
         <Version>1.0.0</Version>
         <AssemblyName>Apps.Blackbird</AssemblyName>
     </PropertyGroup>

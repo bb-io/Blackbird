@@ -12,6 +12,7 @@ using RestSharp;
 
 namespace Apps.Blackbird.Actions;
 
+[ActionList]
 public class NestActions : BlackbirdAppInvocable
 {
     public NestActions(InvocationContext invocationContext) : base(invocationContext)
