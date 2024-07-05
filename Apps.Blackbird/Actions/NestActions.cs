@@ -41,7 +41,7 @@ public class NestActions : BlackbirdAppInvocable
     [Action("Add user to nest", Description = "Add a new user to the specific tenant nest")]
     public Task AddUserToNest([ActionParameter] NestRequest nest, [ActionParameter] UserRequest user)
     {
-        var request = new BlackbirdAppRequest($"nests/{nest.NestId}/users", Method.Post, Creds)
+        var request = new BlackbirdAppRequest($"nests/{nest.NestId}/users", Method.Put, Creds)
             .WithJsonBody(new
             {
                 user.UserId

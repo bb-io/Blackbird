@@ -13,7 +13,7 @@ public class BlackbirdAppClient : BlackBirdRestClient
 {
     public BlackbirdAppClient(AuthenticationCredentialsProvider[] creds) : base(new()
     {
-        BaseUrl = creds.Get(CredsNames.Url).Value.ToUri()
+        BaseUrl = (creds.Get(CredsNames.Url).Value.TrimEnd('/') + "/api-rest").ToUri()
     })
     {
     }
@@ -21,6 +21,6 @@ public class BlackbirdAppClient : BlackBirdRestClient
     protected override Exception ConfigureErrorException(RestResponse response)
     {
         var error = JsonConvert.DeserializeObject<ErrorResponse>(response.Content);
-        return new(error.Detail);
+        return new(error?.Detail ?? response.StatusDescription);
     }
 }
