@@ -8,7 +8,7 @@ public class NestUserAddedWebhookHandler : BlackbirdWebhookHandler
 {
     protected override string EventType => "nest_user_added";
 
-    public NestUserAddedWebhookHandler(InvocationContext invocationContext, [WebhookParameter] NestWebhookInput nestRequest) :
+    public NestUserAddedWebhookHandler(InvocationContext invocationContext, [WebhookParameter(true)] NestRequiredWebhookInput nestRequest) :
         base(invocationContext, nestRequest.NestId)
     {
     }

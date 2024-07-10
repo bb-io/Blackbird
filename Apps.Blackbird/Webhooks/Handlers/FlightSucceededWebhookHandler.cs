@@ -6,10 +6,10 @@ namespace Apps.Blackbird.Webhooks.Handlers;
 
 public class FlightSucceededWebhookHandler : BlackbirdWebhookHandler
 {
-    protected override string EventType => "flight_succeded";
+    protected override string EventType => "flight_succeeded";
 
     public FlightSucceededWebhookHandler(InvocationContext invocationContext,
-        [WebhookParameter] NestWebhookInput nestRequest) :
+        [WebhookParameter(true)] NestWebhookInput nestRequest) :
         base(invocationContext, nestRequest.NestId)
     {
     }

@@ -8,7 +8,7 @@ public class FlightFailedWebhookHandler : BlackbirdWebhookHandler
 {
     protected override string EventType => "flight_failed";
 
-    public FlightFailedWebhookHandler(InvocationContext invocationContext, [WebhookParameter] NestWebhookInput nestRequest) :
+    public FlightFailedWebhookHandler(InvocationContext invocationContext, [WebhookParameter(true)] NestWebhookInput nestRequest) :
         base(invocationContext, nestRequest.NestId)
     {
     }

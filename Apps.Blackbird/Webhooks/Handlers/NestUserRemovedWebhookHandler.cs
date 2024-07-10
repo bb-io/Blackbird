@@ -8,7 +8,7 @@ public class NestUserRemovedWebhookHandler : BlackbirdWebhookHandler
 {
     protected override string EventType => "nest_user_removed";
 
-    public NestUserRemovedWebhookHandler(InvocationContext invocationContext, [WebhookParameter] NestWebhookInput nestRequest) :
+    public NestUserRemovedWebhookHandler(InvocationContext invocationContext, [WebhookParameter(true)] NestRequiredWebhookInput nestRequest) :
         base(invocationContext, nestRequest.NestId)
     {
     }

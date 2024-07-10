@@ -9,7 +9,7 @@ public class FlightStartedWebhookHandler : BlackbirdWebhookHandler
     protected override string EventType => "flight_started";
 
     public FlightStartedWebhookHandler(InvocationContext invocationContext,
-        [WebhookParameter] NestWebhookInput nestRequest) :
+        [WebhookParameter(true)] NestWebhookInput nestRequest) :
         base(invocationContext, nestRequest.NestId)
     {
     }
