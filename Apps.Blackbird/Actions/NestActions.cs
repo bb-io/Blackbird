@@ -19,7 +19,7 @@ public class NestActions : BlackbirdAppInvocable
     {
     }
 
-    [Action("List nests", Description = "List all nests of the tenant")]
+    [Action("Search nests", Description = "Search for nests of the tenant")]
     public async Task<ListNestsResponse> ListNests()
     {
         var request = new BlackbirdAppRequest("nests", Method.Get, Creds);

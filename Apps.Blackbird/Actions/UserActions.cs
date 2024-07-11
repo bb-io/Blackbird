@@ -17,7 +17,7 @@ public class UserActions : BlackbirdAppInvocable
     {
     }
 
-    [Action("List users", Description = "List all users of the tenant")]
+    [Action("Search users", Description = "Search for users of the tenant")]
     public async Task<ListUsersResponse> ListUsers()
     {
         var request = new BlackbirdAppRequest("users", Method.Get, Creds);

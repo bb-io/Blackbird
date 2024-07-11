@@ -19,7 +19,7 @@ public class BirdActions : BlackbirdAppInvocable
     {
     }
 
-    [Action("List birds", Description = "List all birds of the nest")]
+    [Action("Search birds", Description = "Search for birds of the specific nest")]
     public async Task<ListBirdsResponse> ListBirds([ActionParameter] NestRequest nest,
         [ActionParameter] ListBirdsRequest input)
     {

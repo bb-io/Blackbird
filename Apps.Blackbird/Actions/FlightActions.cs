@@ -20,7 +20,7 @@ public class FlightActions : BlackbirdAppInvocable
     }
 
 
-    [Action("List flights", Description = "List all flights of the nest")]
+    [Action("Search flights", Description = "Search for flights of the specific nest")]
     public async Task<ListFlightsResponse> ListFlights([ActionParameter] BirdRequest bird,
         [ActionParameter] ListFlightsRequest input)
     {
