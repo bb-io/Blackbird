@@ -41,7 +41,7 @@ public class BirdActions : BlackbirdAppInvocable
     }   
     
     [Action("Start bird", Description = "Start specific published bird")]
-    public Task StartBird([ActionParameter] BirdRequest bird)
+    public Task StartBird([ActionParameter] StartBirdRequest bird)
     {
         var request = new BlackbirdAppRequest($"nests/{bird.NestId}/birds/{bird.BirdId}", Method.Post, Creds);
         return Client.ExecuteWithErrorHandling(request);
