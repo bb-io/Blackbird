@@ -63,29 +63,84 @@ public class WebhookList : BlackbirdAppInvocable
     }
 
     [Webhook("On bird published", typeof(BirdPublishedWebhookHandler), Description = "On a specific bird published")]
-    public Task<WebhookResponse<BirdEntity>> OnBirdPublished(WebhookRequest request)
-        => ProcessWebhook<BirdEntity>(request);
+    public async Task<WebhookResponse<BirdEntity>> OnBirdPublished(WebhookRequest request)
+    {
+        var result = await ProcessWebhook<BirdEntity>(request);
+
+        if (result.Result?.Id == InvocationContext.Bird?.Id.ToString())
+            return new()
+            {
+                HttpResponseMessage = new(HttpStatusCode.OK),
+                ReceivedWebhookRequestType = WebhookRequestType.Preflight
+            };
+
+        return result;
+    }
 
     [Webhook("On bird suspended", typeof(BirdSuspendedWebhookHandler), Description = "On a specific bird suspended")]
     public Task<WebhookResponse<BirdEntity>> OnBirdSuspended(WebhookRequest request)
         => ProcessWebhook<BirdEntity>(request);
 
     [Webhook("On bird activated", typeof(BirdActivatedWebhookHandler), Description = "On a specific bird activated")]
-    public Task<WebhookResponse<BirdEntity>> OnBirdActivated(WebhookRequest request)
-        => ProcessWebhook<BirdEntity>(request);
+    public async Task<WebhookResponse<BirdEntity>> OnBirdActivated(WebhookRequest request)
+    {
+        var result = await ProcessWebhook<BirdEntity>(request);
+
+        if (result.Result?.Id == InvocationContext.Bird?.Id.ToString())
+            return new()
+            {
+                HttpResponseMessage = new(HttpStatusCode.OK),
+                ReceivedWebhookRequestType = WebhookRequestType.Preflight
+            };
+
+        return result;
+    }
 
     [Webhook("On flight started", typeof(FlightStartedWebhookHandler), Description = "On a new flight started")]
-    public Task<WebhookResponse<FlightEntity>> OnFlightStarted(WebhookRequest request)
-        => ProcessWebhook<FlightEntity>(request);
+    public async Task<WebhookResponse<FlightEntity>> OnFlightStarted(WebhookRequest request)
+    {
+        var result = await ProcessWebhook<FlightEntity>(request);
+
+        if (result.Result?.BirdId == InvocationContext.Bird?.Id.ToString())
+            return new()
+            {
+                HttpResponseMessage = new(HttpStatusCode.OK),
+                ReceivedWebhookRequestType = WebhookRequestType.Preflight
+            };
+
+        return result;
+    }
 
     [Webhook("On flight succeeded", typeof(FlightSucceededWebhookHandler),
         Description = "On a specific flight succeeded")]
-    public Task<WebhookResponse<FlightEntity>> OnFlightSucceeded(WebhookRequest request)
-        => ProcessWebhook<FlightEntity>(request);
+    public async Task<WebhookResponse<FlightEntity>> OnFlightSucceeded(WebhookRequest request)
+    {
+        var result = await ProcessWebhook<FlightEntity>(request);
+
+        if (result.Result?.BirdId == InvocationContext.Bird?.Id.ToString())
+            return new()
+            {
+                HttpResponseMessage = new(HttpStatusCode.OK),
+                ReceivedWebhookRequestType = WebhookRequestType.Preflight
+            };
+
+        return result;
+    }
 
     [Webhook("On flight failed", typeof(FlightFailedWebhookHandler), Description = "On a specific flight failed")]
-    public Task<WebhookResponse<FlightEntity>> OnFlightFailed(WebhookRequest request)
-        => ProcessWebhook<FlightEntity>(request);
+    public async Task<WebhookResponse<FlightEntity>> OnFlightFailed(WebhookRequest request)
+    {
+        var result = await ProcessWebhook<FlightEntity>(request);
+
+        if (result.Result?.BirdId == InvocationContext.Bird?.Id.ToString())
+            return new()
+            {
+                HttpResponseMessage = new(HttpStatusCode.OK),
+                ReceivedWebhookRequestType = WebhookRequestType.Preflight
+            };
+
+        return result;
+    }
 
     private Task<WebhookResponse<T>> ProcessWebhook<T>(WebhookRequest request) where T : class
     {
