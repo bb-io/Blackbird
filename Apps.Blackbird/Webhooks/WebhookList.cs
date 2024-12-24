@@ -63,13 +63,13 @@ public class WebhookList : BlackbirdAppInvocable
     }
 
     [Webhook("On bird published", typeof(BirdPublishedWebhookHandler), Description = "On a specific bird published")]
-    public Task<WebhookResponse<BirdEntity>> OnBirdPublished(WebhookRequest request) => ProcessBirdWebhook(request);
+    public Task<WebhookResponse<BirdWrapperResponse>> OnBirdPublished(WebhookRequest request) => ProcessBirdWebhook(request);
 
     [Webhook("On bird suspended", typeof(BirdSuspendedWebhookHandler), Description = "On a specific bird suspended")]
-    public Task<WebhookResponse<BirdEntity>> OnBirdSuspended(WebhookRequest request) => ProcessBirdWebhook(request);
+    public Task<WebhookResponse<BirdWrapperResponse>> OnBirdSuspended(WebhookRequest request) => ProcessBirdWebhook(request);
 
     [Webhook("On bird activated", typeof(BirdActivatedWebhookHandler), Description = "On a specific bird activated")]
-    public Task<WebhookResponse<BirdEntity>> OnBirdActivated(WebhookRequest request) => ProcessBirdWebhook(request);
+    public Task<WebhookResponse<BirdWrapperResponse>> OnBirdActivated(WebhookRequest request) => ProcessBirdWebhook(request);
     //
     [Webhook("On flight started", typeof(FlightStartedWebhookHandler), Description = "On a new flight started")]
     public Task<WebhookResponse<FlightWrapperResponse>> OnFlightStarted(WebhookRequest request) => ProcessFlightWebhook(request);
@@ -93,18 +93,37 @@ public class WebhookList : BlackbirdAppInvocable
         });
     }
 
-    private async Task<WebhookResponse<BirdEntity>> ProcessBirdWebhook(WebhookRequest request)
+    private async Task<WebhookResponse<BirdWrapperResponse>> ProcessBirdWebhook(WebhookRequest request)
     {
         var result = await ProcessWebhook<BirdEntity>(request);
+        var bird = result.Result;
 
-        if (result.Result?.Id == InvocationContext.Bird?.Id.ToString())
-            return new()
+        if (bird?.Id == InvocationContext.Bird?.Id.ToString())
+        {
+            return new WebhookResponse<BirdWrapperResponse>
             {
                 HttpResponseMessage = new(HttpStatusCode.OK),
                 ReceivedWebhookRequestType = WebhookRequestType.Preflight
             };
+        }
 
-        return result;
+        var nest = await LoadNestEntityById(bird.NestId);
+
+        var wrapper = new BirdWrapperResponse
+        {
+            Id = bird.Id,
+            Nest = nest,
+            Name = bird.Name,
+            Status = bird.Status,
+            TriggerType = bird.TriggerType,
+            IsPublished = bird.IsPublished
+        };
+
+        return new WebhookResponse<BirdWrapperResponse>
+        {
+            HttpResponseMessage = new(HttpStatusCode.OK),
+            Result = wrapper
+        };
     }
 
     private async Task<WebhookResponse<FlightWrapperResponse>> ProcessFlightWebhook(WebhookRequest request)
@@ -140,7 +159,7 @@ public class WebhookList : BlackbirdAppInvocable
         };
     }
 
-    public async Task<BirdEntity?> LoadBirdEntityById(string? birdId, string? nestId)
+    private async Task<BirdEntity?> LoadBirdEntityById(string? birdId, string? nestId)
     {
         if (string.IsNullOrWhiteSpace(birdId))
             return null;
