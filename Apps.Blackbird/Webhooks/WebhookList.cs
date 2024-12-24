@@ -70,7 +70,7 @@ public class WebhookList : BlackbirdAppInvocable
 
     [Webhook("On bird activated", typeof(BirdActivatedWebhookHandler), Description = "On a specific bird activated")]
     public Task<WebhookResponse<BirdWrapperResponse>> OnBirdActivated(WebhookRequest request) => ProcessBirdWebhook(request);
-    //
+
     [Webhook("On flight started", typeof(FlightStartedWebhookHandler), Description = "On a new flight started")]
     public Task<WebhookResponse<FlightWrapperResponse>> OnFlightStarted(WebhookRequest request) => ProcessFlightWebhook(request);
 
