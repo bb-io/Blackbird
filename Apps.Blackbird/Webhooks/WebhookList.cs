@@ -70,14 +70,12 @@ public class WebhookList : BlackbirdAppInvocable
 
     [Webhook("On bird activated", typeof(BirdActivatedWebhookHandler), Description = "On a specific bird activated")]
     public Task<WebhookResponse<BirdEntity>> OnBirdActivated(WebhookRequest request) => ProcessBirdWebhook(request);
-
+    //
     [Webhook("On flight started", typeof(FlightStartedWebhookHandler), Description = "On a new flight started")]
     public Task<WebhookResponse<FlightEntity>> OnFlightStarted(WebhookRequest request) => ProcessFlightWebhook(request);
 
-    [Webhook("On flight succeeded", typeof(FlightSucceededWebhookHandler),
-        Description = "On a specific flight succeeded")]
-    public Task<WebhookResponse<FlightEntity>> OnFlightSucceeded(WebhookRequest request) =>
-        ProcessFlightWebhook(request);
+    [Webhook("On flight succeeded", typeof(FlightSucceededWebhookHandler),Description = "On a specific flight succeeded")]
+    public Task<WebhookResponse<FlightEntity>> OnFlightSucceeded(WebhookRequest request) => ProcessFlightWebhook(request);
 
     [Webhook("On flight failed", typeof(FlightFailedWebhookHandler), Description = "On a specific flight failed")]
     public Task<WebhookResponse<FlightEntity>> OnFlightFailed(WebhookRequest request) => ProcessFlightWebhook(request);
