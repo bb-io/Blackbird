@@ -119,9 +119,7 @@ public class WebhookList : BlackbirdAppInvocable
                 ReceivedWebhookRequestType = WebhookRequestType.Preflight
             };
 
-
-
-        var bird = await LoadBirdEntityById(flight.BirdId);
+        var bird = await LoadBirdEntityById(flight.BirdId, flight.NestId);
         var nest = await LoadNestEntityById(flight.NestId);
 
         var wrapper = new FlightWrapperResponse
@@ -142,12 +140,12 @@ public class WebhookList : BlackbirdAppInvocable
         };
     }
 
-    private async Task<BirdEntity?> LoadBirdEntityById(string? birdId)
+    public async Task<BirdEntity?> LoadBirdEntityById(string? birdId, string? nestId)
     {
         if (string.IsNullOrWhiteSpace(birdId))
             return null;
 
-        var birdRequest = new BlackbirdAppRequest($"birds/{birdId}", Method.Get, Creds);
+        var birdRequest = new BlackbirdAppRequest($"nests/{nestId}/birds/{birdId}", Method.Get, Creds);
         return await Client.ExecuteWithErrorHandling<BirdEntity>(birdRequest);
     }
 
