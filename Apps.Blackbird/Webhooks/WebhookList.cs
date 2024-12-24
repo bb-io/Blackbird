@@ -119,17 +119,14 @@ public class WebhookList : BlackbirdAppInvocable
                 ReceivedWebhookRequestType = WebhookRequestType.Preflight
             };
 
-        var bird = flight is not null
-        ? await LoadBirdEntityById(flight.BirdId)
-        : null;
 
-        var nest = flight is not null
-        ? await LoadNestEntityById(flight.NestId)
-        : null;
+
+        var bird = await LoadBirdEntityById(flight.BirdId);
+        var nest = await LoadNestEntityById(flight.NestId);
 
         var wrapper = new FlightWrapperResponse
         {
-            Id = flight?.Id,
+            Id = flight.Id,
             Bird = bird,
             Nest = nest,
             Status = flight.Status,
