@@ -6,6 +6,7 @@ using Apps.Blackbird.Models.Request.Nests;
 using Apps.Blackbird.Models.Response.Birds;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Actions;
+using Blackbird.Applications.Sdk.Common.Exceptions;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.Sdk.Utils.Extensions.String;
 using RestSharp;
@@ -36,14 +37,26 @@ public class BirdActions : BlackbirdAppInvocable
     [Action("Get bird", Description = "Get details of a specific tenant bird")]
     public Task<BirdEntity> GetBird([ActionParameter] BirdRequest bird)
     {
-        var request = new BlackbirdAppRequest($"nests/{bird.NestId}/birds/{bird.BirdId}", Method.Get, Creds);
-        return Client.ExecuteWithErrorHandling<BirdEntity>(request);
+        return  GetBirdDetails(bird.NestId, bird.BirdId);
     }   
     
     [Action("Start bird", Description = "Start specific published bird")]
-    public Task StartBird([ActionParameter] StartBirdRequest bird)
+    public async Task StartBird([ActionParameter] StartBirdRequest bird)
     {
+        var birdDetails = await GetBirdDetails(bird.NestId, bird.BirdId);
+
+        if (!string.Equals(birdDetails.TriggerType, "manual", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new PluginMisconfigurationException($"Only Birds with manual triggers can be started through this action");
+        }
+
         var request = new BlackbirdAppRequest($"nests/{bird.NestId}/birds/{bird.BirdId}", Method.Post, Creds);
-        return Client.ExecuteWithErrorHandling(request);
+        await Client.ExecuteWithErrorHandling(request);
+    }
+
+    private async Task<BirdEntity> GetBirdDetails(string nestId, string birdId)
+    {
+        var request = new BlackbirdAppRequest($"nests/{nestId}/birds/{birdId}", Method.Get, Creds);
+        return await Client.ExecuteWithErrorHandling<BirdEntity>(request);
     }
 }
