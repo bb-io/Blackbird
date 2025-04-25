@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <Product>Blackbird Service API</Product>
         <Description>Respond to changes in birds and flights or trigger new flights.</Description>
-        <Version>1.0.6</Version>
+        <Version>1.0.7</Version>
         <AssemblyName>Apps.Blackbird</AssemblyName>
     </PropertyGroup>
 
