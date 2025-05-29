@@ -2,6 +2,7 @@ using System.Net;
 using Apps.Blackbird.Api;
 using Apps.Blackbird.Invocables;
 using Apps.Blackbird.Models.Entities;
+using Apps.Blackbird.Models.Request.Birds;
 using Apps.Blackbird.Webhooks.Handlers;
 using Apps.Blackbird.Webhooks.Models;
 using Blackbird.Applications.Sdk.Common.Invocation;
@@ -78,7 +79,8 @@ public class WebhookList : BlackbirdAppInvocable
     public Task<WebhookResponse<FlightWrapperResponse>> OnFlightSucceeded(WebhookRequest request) => ProcessFlightWebhook(request);
 
     [Webhook("On flight failed", typeof(FlightFailedWebhookHandler), Description = "On a specific flight failed")]
-    public Task<WebhookResponse<FlightWrapperResponse>> OnFlightFailed(WebhookRequest request) => ProcessFlightWebhook(request);
+    public Task<WebhookResponse<FlightWrapperResponse>> OnFlightFailed(WebhookRequest request,
+        [WebhookParameter(true)] BirdWebhookRequest filter) => ProcessFlightWebhook(request, filter.BirdId);
 
     private Task<WebhookResponse<T>> ProcessWebhook<T>(WebhookRequest request) where T : class
     {
@@ -126,10 +128,21 @@ public class WebhookList : BlackbirdAppInvocable
         };
     }
 
-    private async Task<WebhookResponse<FlightWrapperResponse>> ProcessFlightWebhook(WebhookRequest request)
+    private async Task<WebhookResponse<FlightWrapperResponse>> ProcessFlightWebhook(WebhookRequest request,
+        string? birdIdFilter=null)
     {
         var result = await ProcessWebhook<FlightEntity>(request);
         var flight = result.Result;
+
+        if (!string.IsNullOrWhiteSpace(birdIdFilter)
+        && !string.Equals(birdIdFilter, flight?.BirdId, StringComparison.OrdinalIgnoreCase))
+        {
+            return new WebhookResponse<FlightWrapperResponse>
+            {
+                HttpResponseMessage = new(HttpStatusCode.OK),
+                ReceivedWebhookRequestType = WebhookRequestType.Preflight
+            };
+        }
 
         if (flight?.BirdId == InvocationContext.Bird?.Id.ToString())
             return new()
