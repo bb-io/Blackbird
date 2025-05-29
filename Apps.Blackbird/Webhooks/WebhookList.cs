@@ -80,7 +80,7 @@ public class WebhookList : BlackbirdAppInvocable
 
     [Webhook("On flight failed", typeof(FlightFailedWebhookHandler), Description = "On a specific flight failed")]
     public Task<WebhookResponse<FlightWrapperResponse>> OnFlightFailed(WebhookRequest request,
-        [WebhookParameter(true)] BirdWebhookRequest filter) => ProcessFlightWebhook(request, filter.BirdId);
+        [WebhookParameter(true)] BirdWebhookRequest filter) => ProcessFlightWebhook(request, filter?.BirdId);
 
     private Task<WebhookResponse<T>> ProcessWebhook<T>(WebhookRequest request) where T : class
     {

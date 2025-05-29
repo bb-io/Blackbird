@@ -8,10 +8,10 @@ namespace Apps.Blackbird.Webhooks.Models
     {
         [Display("Nest ID")]
         [DataSource(typeof(NestDataSourceHandlers))]
-        public string NestId { get; set; }
+        public string? NestId { get; set; }
 
         [Display("Bird ID")]
         [DataSource(typeof(BirdDataSourceHandler))]
-        public string BirdId { get; set; }
+        public string? BirdId { get; set; }
     }
 }
