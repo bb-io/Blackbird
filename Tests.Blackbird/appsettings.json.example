@@ -1,9 +1,7 @@
 {
-    "ConnectionDefinition": {
-        "host": "",
-        "login": "",
-        "password": "",
-        "port": ""
-    },
+  "ConnectionDefinition": {
+    "api_token": "",
+    "url": ""
+  },
     "TestFolder": "TestFiles"
 }
