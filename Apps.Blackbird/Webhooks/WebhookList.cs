@@ -79,8 +79,59 @@ public class WebhookList : BlackbirdAppInvocable
     public Task<WebhookResponse<FlightWrapperResponse>> OnFlightSucceeded(WebhookRequest request) => ProcessFlightWebhook(request);
 
     [Webhook("On flight failed", typeof(FlightFailedWebhookHandler), Description = "On a specific flight failed")]
-    public Task<WebhookResponse<FlightWrapperResponse>> OnFlightFailed(WebhookRequest request,
-        [WebhookParameter(true)] BirdWebhookRequest filter) => ProcessFlightWebhook(request, filter?.BirdId);
+    public async Task<WebhookResponse<FlightWrapperResponse>> OnFlightFailed(WebhookRequest request,
+        [WebhookParameter(true)] BirdWebhookRequest filter)
+    {
+        if (await ShouldPreflightAsync(request, filter))
+        {
+            return (new WebhookResponse<FlightWrapperResponse>
+            {
+                HttpResponseMessage = new(HttpStatusCode.OK),
+                ReceivedWebhookRequestType = WebhookRequestType.Preflight
+            });
+        }
+
+        return await ProcessFlightWebhook(request, filter?.BirdId);
+    }
+
+    private async Task<bool> ShouldPreflightAsync(WebhookRequest request, BirdWebhookRequest? filter)
+    {
+        try
+        {
+            var payload = request.Body?.ToString();
+            if (string.IsNullOrWhiteSpace(payload))
+                return true;
+
+            var data = JsonConvert.DeserializeObject<BlackbirdWebhookPayload<FlightEntity>>(payload);
+            var flight = data?.Entity;
+            if (flight is null)
+                return true;
+
+            if (flight.BirdId == InvocationContext.Bird?.Id.ToString())
+                return true;
+
+            if (!string.IsNullOrWhiteSpace(filter?.BirdId) &&
+                !string.Equals(filter.BirdId, flight.BirdId, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (!string.IsNullOrWhiteSpace(filter?.NestId) &&
+                !string.Equals(filter.NestId, flight.NestId, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (!string.IsNullOrWhiteSpace(filter?.BirdStatus))
+            {
+                var bird = await LoadBirdEntityById(flight.BirdId, flight.NestId);
+                if (!string.Equals(bird?.Status, filter.BirdStatus, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+        catch
+        {
+            return true;
+        }
+    }
 
     private Task<WebhookResponse<T>> ProcessWebhook<T>(WebhookRequest request) where T : class
     {
@@ -189,6 +240,5 @@ public class WebhookList : BlackbirdAppInvocable
         var nestRequest = new BlackbirdAppRequest($"nests/{nestId}", Method.Get, Creds);
         return await Client.ExecuteWithErrorHandling<NestEntity>(nestRequest);
     }
-
 
 }
