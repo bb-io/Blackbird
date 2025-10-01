@@ -30,7 +30,7 @@ Before you can connect you need to make sure that:
 1. Navigate to apps and search for Blackbird. Select the Blackbird app.
 2. Click _Add connection_
 3. Give your connection a name.
-4. Under URL, fill in the base URL of your Blackbird instance. F.e. _https://de-1.blackbird.io_.
+4. Under Instance, select which instance of Blackbird you are using F.e. Europe (de-1) (_https://de-1.blackbird.io_).
 5. Under API token, fill in the API token you have just created.
 6. Click _Connect_.
 

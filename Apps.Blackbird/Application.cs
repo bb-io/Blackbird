@@ -11,12 +11,6 @@ public class Application : IApplication, ICategoryProvider
         set { }
     }
 
-    public string Name
-    {
-        get => "Blackbird";
-        set { }
-    }
-
     public T GetInstance<T>()
     {
         throw new NotImplementedException();
