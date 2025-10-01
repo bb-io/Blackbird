@@ -12,18 +12,17 @@ public class ConnectionDefinition : IConnectionDefinition
         {
             Name = "Developer API key",
             AuthenticationType = ConnectionAuthenticationType.Undefined,
-            ConnectionUsage = ConnectionUsage.Actions,
             ConnectionProperties = new List<ConnectionProperty>
             {
-                new(CredsNames.Url) { DisplayName = "URL" },
+                new(CredsNames.Url) { DisplayName = "Instance", DataItems = [
+                    new ConnectionPropertyValue("https://de-1.blackbird.io", "Europe (de-1)"),
+                    new ConnectionPropertyValue("https://us-1.blackbird.io", "America (us-1)")
+                    ] },
                 new(CredsNames.ApiToken) { DisplayName = "API token", Sensitive = true }
             }
         }
     };
 
-    public IEnumerable<AuthenticationCredentialsProvider> CreateAuthorizationCredentialsProviders(
-        Dictionary<string, string> values) =>
-        values.Select(x =>
-                new AuthenticationCredentialsProvider(AuthenticationCredentialsRequestLocation.None, x.Key, x.Value))
-            .ToList();
+    public IEnumerable<AuthenticationCredentialsProvider> CreateAuthorizationCredentialsProviders(Dictionary<string, string> values) => 
+        values.Select(x => new AuthenticationCredentialsProvider(x.Key, x.Value)).ToList();
 }
