@@ -15,6 +15,7 @@ public class ConnectionDefinition : IConnectionDefinition
             ConnectionProperties = new List<ConnectionProperty>
             {
                 new(CredsNames.Url) { DisplayName = "Instance", DataItems = [
+                    new ConnectionPropertyValue("https://eu-1.blackbird.io", "Europe (eu-1)"),
                     new ConnectionPropertyValue("https://de-1.blackbird.io", "Europe (de-1)"),
                     new ConnectionPropertyValue("https://us-1.blackbird.io", "America (us-1)")
                     ] },
