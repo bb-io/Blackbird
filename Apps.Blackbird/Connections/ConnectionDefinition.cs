@@ -16,8 +16,8 @@ public class ConnectionDefinition : IConnectionDefinition
             {
                 new(CredsNames.Url) { DisplayName = "Instance", DataItems = [
                     new ConnectionPropertyValue("https://eu-1.blackbird.io", "Europe (eu-1)"),
-                    new ConnectionPropertyValue("https://de-1.blackbird.io", "Europe (de-1)"),
-                    new ConnectionPropertyValue("https://us-1.blackbird.io", "America (us-1)")
+                    new ConnectionPropertyValue("https://us-1.blackbird.io", "America (us-1)"),
+                    new ConnectionPropertyValue("https://us-2.blackbird.io", "America (us-2)")
                     ] },
                 new(CredsNames.ApiToken) { DisplayName = "API token", Sensitive = true }
             }
