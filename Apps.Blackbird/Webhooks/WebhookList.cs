@@ -84,17 +84,17 @@ public class WebhookList : BlackbirdAppInvocable
     {
         if (await ShouldPreflightAsync(request, filter))
         {
-            return (new WebhookResponse<FlightWrapperResponse>
+            return new WebhookResponse<FlightWrapperResponse>
             {
                 HttpResponseMessage = new(HttpStatusCode.OK),
                 ReceivedWebhookRequestType = WebhookRequestType.Preflight
-            });
+            };
         }
 
-        return await ProcessFlightWebhook(request, filter?.BirdId);
+        return await ProcessFlightWebhook(request, filter.BirdIds?.ToArray() ?? []);
     }
 
-    private async Task<bool> ShouldPreflightAsync(WebhookRequest request, BirdWebhookRequest? filter)
+    private async Task<bool> ShouldPreflightAsync(WebhookRequest request, BirdWebhookRequest filter)
     {
         try
         {
@@ -110,8 +110,7 @@ public class WebhookList : BlackbirdAppInvocable
             if (flight.BirdId == InvocationContext.Bird?.Id.ToString())
                 return true;
 
-            if (!string.IsNullOrWhiteSpace(filter?.BirdId) &&
-                !string.Equals(filter.BirdId, flight.BirdId, StringComparison.OrdinalIgnoreCase))
+            if (filter.BirdIds != null && filter.BirdIds.Any() && !filter.BirdIds.Contains(flight.BirdId))
                 return true;
 
             if (!string.IsNullOrWhiteSpace(filter?.NestId) &&
@@ -180,13 +179,12 @@ public class WebhookList : BlackbirdAppInvocable
     }
 
     private async Task<WebhookResponse<FlightWrapperResponse>> ProcessFlightWebhook(WebhookRequest request,
-        string? birdIdFilter=null)
+        params string[] birdIdFilter)
     {
         var result = await ProcessWebhook<FlightEntity>(request);
         var flight = result.Result;
 
-        if (!string.IsNullOrWhiteSpace(birdIdFilter)
-        && !string.Equals(birdIdFilter, flight?.BirdId, StringComparison.OrdinalIgnoreCase))
+        if (birdIdFilter.Length != 0 && !birdIdFilter.Contains(flight?.BirdId))
         {
             return new WebhookResponse<FlightWrapperResponse>
             {
