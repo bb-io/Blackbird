@@ -73,10 +73,38 @@ public class WebhookList : BlackbirdAppInvocable
     public Task<WebhookResponse<BirdWrapperResponse>> OnBirdActivated(WebhookRequest request) => ProcessBirdWebhook(request);
 
     [Webhook("On flight started", typeof(FlightStartedWebhookHandler), Description = "On a new flight started")]
-    public Task<WebhookResponse<FlightWrapperResponse>> OnFlightStarted(WebhookRequest request) => ProcessFlightWebhook(request);
+    public async Task<WebhookResponse<FlightWrapperResponse>> OnFlightStarted(WebhookRequest request,
+        [WebhookParameter(true)] BirdWebhookRequest filter)
 
-    [Webhook("On flight succeeded", typeof(FlightSucceededWebhookHandler),Description = "On a specific flight succeeded")]
-    public Task<WebhookResponse<FlightWrapperResponse>> OnFlightSucceeded(WebhookRequest request) => ProcessFlightWebhook(request);
+    {
+        if (await ShouldPreflightAsync(request, filter))
+        {
+            return new WebhookResponse<FlightWrapperResponse>
+            {
+                HttpResponseMessage = new(HttpStatusCode.OK),
+                ReceivedWebhookRequestType = WebhookRequestType.Preflight
+            };
+        }
+
+        return await ProcessFlightWebhook(request, filter.BirdIds?.ToArray() ?? []);
+    }
+
+    [Webhook("On flight succeeded", typeof(FlightSucceededWebhookHandler), Description = "On a specific flight succeeded")]
+    public async Task<WebhookResponse<FlightWrapperResponse>> OnFlightSucceeded(WebhookRequest request,
+        [WebhookParameter(true)] BirdWebhookRequest filter)
+
+    {
+        if (await ShouldPreflightAsync(request, filter))
+        {
+            return new WebhookResponse<FlightWrapperResponse>
+            {
+                HttpResponseMessage = new(HttpStatusCode.OK),
+                ReceivedWebhookRequestType = WebhookRequestType.Preflight
+            };
+        }
+
+        return await ProcessFlightWebhook(request, filter.BirdIds?.ToArray() ?? []);
+    }
 
     [Webhook("On flight failed", typeof(FlightFailedWebhookHandler), Description = "On a specific flight failed")]
     public async Task<WebhookResponse<FlightWrapperResponse>> OnFlightFailed(WebhookRequest request,
