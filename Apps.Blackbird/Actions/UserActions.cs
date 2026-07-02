@@ -17,7 +17,7 @@ public class UserActions : BlackbirdAppInvocable
     {
     }
 
-    [Action("Search users", Description = "Returns a list of all users")]
+    [Action("Search users", Description = "Search all users")]
     public async Task<ListUsersResponse> ListUsers()
     {
         var request = new BlackbirdAppRequest("users", Method.Get, Creds);

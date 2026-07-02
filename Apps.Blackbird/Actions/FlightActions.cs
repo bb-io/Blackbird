@@ -22,7 +22,7 @@ public class FlightActions : BlackbirdAppInvocable
     }
 
 
-    [Action("Search Flights", Description = "Search for Flights of the specific nest")]
+    [Action("Search Flights", Description = "Search Flights for a specific Bird")]
     public async Task<ListFlightsResponse> ListFlights([ActionParameter] BirdRequest bird,
         [ActionParameter] ListFlightsRequest input)
     {
@@ -44,7 +44,7 @@ public class FlightActions : BlackbirdAppInvocable
         return Client.ExecuteWithErrorHandling<FlightEntity>(request);
     }
 
-    [Action("Get Flight Logs", Description = "Get all the logs of a specific Flight")]
+    [Action("Get Flight Logs", Description = "Get logs for a specific Flight")]
     public async Task<LogResponse<FlightEvent>> GetFlightLogs([ActionParameter] FlightRequest flight)
     {
         var request = new BlackbirdAppRequest($"nests/{flight.NestId}/birds/{flight.BirdId}/flights/{flight.FlightId}/logs", Method.Get, Creds);

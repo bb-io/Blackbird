@@ -22,7 +22,7 @@ public class BirdActions : BlackbirdAppInvocable
     {
     }
 
-    [Action("Search Birds", Description = "Search for Birds of the specific Nest")]
+    [Action("Search Birds", Description = "Search Birds in a specific Nest")]
     public async Task<ListBirdsResponse> ListBirds([ActionParameter] NestRequest nest,
         [ActionParameter] ListBirdsRequest input)
     {
@@ -42,7 +42,7 @@ public class BirdActions : BlackbirdAppInvocable
         return GetBirdDetails(bird.NestId, bird.BirdId);
     }
 
-    [Action("Get Bird logs", Description = "Get all the logs of a specific Bird")]
+    [Action("Get Bird logs", Description = "Get logs for a specific Bird")]
     public async Task<LogResponse<BirdEvent>> GetBirdLogs([ActionParameter] BirdRequest bird)
     {
         var request = new BlackbirdAppRequest($"nests/{bird.NestId}/birds/{bird.BirdId}/logs", Method.Get, Creds);
@@ -52,7 +52,7 @@ public class BirdActions : BlackbirdAppInvocable
         return new(response);
     }
 
-    [Action("Fly Bird", Description = "Fly a specific published manual Bird")]
+    [Action("Fly Bird", Description = "Start a Flight for a published manual Bird")]
     public async Task StartBird([ActionParameter] StartBirdRequest bird)
     {
         var birdDetails = await GetBirdDetails(bird.NestId, bird.BirdId);
