@@ -2,6 +2,7 @@ using System.Net;
 using Apps.Blackbird.Api;
 using Apps.Blackbird.Invocables;
 using Apps.Blackbird.Models.Entities;
+using Apps.Blackbird.Models.Events;
 using Apps.Blackbird.Models.Request.Birds;
 using Apps.Blackbird.Webhooks.Handlers;
 using Apps.Blackbird.Webhooks.Models;
@@ -19,16 +20,16 @@ public class WebhookList : BlackbirdAppInvocable
     {
     }
 
-    [Webhook("On nest created", typeof(NestCreatedWebhookHandler), Description = "On a new nest created")]
+    [Webhook("On Nest created", typeof(NestCreatedWebhookHandler), Description = "On a new Nest created")]
     public Task<WebhookResponse<NestEntity>> OnNestCreated(WebhookRequest request)
         => ProcessWebhook<NestEntity>(request);
 
-    [Webhook("On nest deleted", typeof(NestDeletedWebhookHandler), Description = "On a specific nest deleted")]
+    [Webhook("On Nest deleted", typeof(NestDeletedWebhookHandler), Description = "On a specific Nest deleted")]
     public Task<WebhookResponse<NestEntity>> OnNestDeleted(WebhookRequest request)
         => ProcessWebhook<NestEntity>(request);
 
-    [Webhook("On user added to nest", typeof(NestUserAddedWebhookHandler),
-        Description = "On a new user added to the nest")]
+    [Webhook("On user added to Nest", typeof(NestUserAddedWebhookHandler),
+        Description = "On a new user added to the Nest")]
     public async Task<WebhookResponse<NestEntity>> OnUserAddedToNest(WebhookRequest request)
     {
         var payload = request.Body.ToString();
@@ -46,8 +47,8 @@ public class WebhookList : BlackbirdAppInvocable
         };
     }
 
-    [Webhook("On user removed from nest", typeof(NestUserRemovedWebhookHandler),
-        Description = "On a specific user removed from the nest")]
+    [Webhook("On user removed from Nest", typeof(NestUserRemovedWebhookHandler),
+        Description = "On a specific user removed from the Nest")]
     public Task<WebhookResponse<UserWebhookResponse>> OnUserRemovedFromNest(WebhookRequest request)
     {
         var payload = request.Body.ToString();
@@ -63,16 +64,16 @@ public class WebhookList : BlackbirdAppInvocable
         });
     }
 
-    [Webhook("On bird published", typeof(BirdPublishedWebhookHandler), Description = "On a specific bird published")]
+    [Webhook("On Bird published", typeof(BirdPublishedWebhookHandler), Description = "On a specific Bird published")]
     public Task<WebhookResponse<BirdWrapperResponse>> OnBirdPublished(WebhookRequest request) => ProcessBirdWebhook(request);
 
-    [Webhook("On bird suspended", typeof(BirdSuspendedWebhookHandler), Description = "On a specific bird suspended")]
+    [Webhook("On Bird suspended", typeof(BirdSuspendedWebhookHandler), Description = "On a specific Bird suspended")]
     public Task<WebhookResponse<BirdWrapperResponse>> OnBirdSuspended(WebhookRequest request) => ProcessBirdWebhook(request);
 
-    [Webhook("On bird activated", typeof(BirdActivatedWebhookHandler), Description = "On a specific bird activated")]
+    [Webhook("On Bird activated", typeof(BirdActivatedWebhookHandler), Description = "On a specific Bird activated")]
     public Task<WebhookResponse<BirdWrapperResponse>> OnBirdActivated(WebhookRequest request) => ProcessBirdWebhook(request);
 
-    [Webhook("On flight started", typeof(FlightStartedWebhookHandler), Description = "On a new flight started")]
+    [Webhook("On Flight started", typeof(FlightStartedWebhookHandler), Description = "On a new Flight started")]
     public async Task<WebhookResponse<FlightWrapperResponse>> OnFlightStarted(WebhookRequest request,
         [WebhookParameter(true)] BirdWebhookRequest filter)
 
@@ -89,7 +90,7 @@ public class WebhookList : BlackbirdAppInvocable
         return await ProcessFlightWebhook(request, filter.BirdIds?.ToArray() ?? []);
     }
 
-    [Webhook("On flight succeeded", typeof(FlightSucceededWebhookHandler), Description = "On a specific flight succeeded")]
+    [Webhook("On Flight succeeded", typeof(FlightSucceededWebhookHandler), Description = "On a specific Flight succeeded")]
     public async Task<WebhookResponse<FlightWrapperResponse>> OnFlightSucceeded(WebhookRequest request,
         [WebhookParameter(true)] BirdWebhookRequest filter)
 
@@ -106,7 +107,7 @@ public class WebhookList : BlackbirdAppInvocable
         return await ProcessFlightWebhook(request, filter.BirdIds?.ToArray() ?? []);
     }
 
-    [Webhook("On flight failed", typeof(FlightFailedWebhookHandler), Description = "On a specific flight failed")]
+    [Webhook("On Flight failed", typeof(FlightFailedWebhookHandler), Description = "On a specific Flight failed")]
     public async Task<WebhookResponse<FlightWrapperResponse>> OnFlightFailed(WebhookRequest request,
         [WebhookParameter(true)] BirdWebhookRequest filter)
     {
@@ -120,6 +121,21 @@ public class WebhookList : BlackbirdAppInvocable
         }
 
         return await ProcessFlightWebhook(request, filter.BirdIds?.ToArray() ?? []);
+    }
+
+    [Webhook("On Notification received", typeof(NotificationCreatedWebhookHandler), Description = "Triggered when a new notification is received")]
+    public async Task<WebhookResponse<Notification>> OnNotificationReceived(WebhookRequest request)
+    {
+        var payload = request.Body.ToString();
+        ArgumentException.ThrowIfNullOrWhiteSpace(payload);
+
+        var data = JsonConvert.DeserializeObject<Notification>(payload)!;
+
+        return new WebhookResponse<Notification>
+        {
+            HttpResponseMessage = new(HttpStatusCode.OK),
+            Result = data
+        };
     }
 
     private async Task<bool> ShouldPreflightAsync(WebhookRequest request, BirdWebhookRequest filter)

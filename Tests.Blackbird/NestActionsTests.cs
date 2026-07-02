@@ -26,7 +26,7 @@ public class NestActionsTests : TestBase
     {
         // Arrange
         var actions = new NestActions(InvocationContext);
-        var request = new NestRequest { NestId = "687" };
+        var request = new NestRequest { NestId = "682" };
 
         // Act
         var result = await actions.GetNest(request);

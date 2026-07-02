@@ -12,14 +12,14 @@ using RestSharp;
 
 namespace Apps.Blackbird.Actions;
 
-[ActionList]
+[ActionList("Nests")]
 public class NestActions : BlackbirdAppInvocable
 {
     public NestActions(InvocationContext invocationContext) : base(invocationContext)
     {
     }
 
-    [Action("Search nests", Description = "Search for nests of the tenant")]
+    [Action("Search Nests", Description = "Returns a list of all Nests")]
     public async Task<ListNestsResponse> ListNests()
     {
         var request = new BlackbirdAppRequest("nests", Method.Get, Creds);
@@ -31,14 +31,14 @@ public class NestActions : BlackbirdAppInvocable
         };
     }
 
-    [Action("Get nest", Description = "Get details of a specific tenant nest")]
+    [Action("Get Nest", Description = "Get details of a specific Nest")]
     public Task<NestEntity> GetNest([ActionParameter] NestRequest nest)
     {
         var request = new BlackbirdAppRequest($"nests/{nest.NestId}", Method.Get, Creds);
         return Client.ExecuteWithErrorHandling<NestEntity>(request);
     }
 
-    [Action("Add user to nest", Description = "Add a new user to the specific tenant nest")]
+    [Action("Add user to Nest", Description = "Add a new user to the specific Nest")]
     public Task AddUserToNest([ActionParameter] NestRequest nest, [ActionParameter] UserRequest user)
     {
         var request = new BlackbirdAppRequest($"nests/{nest.NestId}/users", Method.Put, Creds)
@@ -49,7 +49,7 @@ public class NestActions : BlackbirdAppInvocable
         return Client.ExecuteWithErrorHandling(request);
     }
 
-    [Action("Remove user from nest", Description = "Remove specific user from the tenant nest")]
+    [Action("Remove user from Nest", Description = "Remove specific user from the Nest")]
     public Task RemoveUserFromNest([ActionParameter] NestRequest nest, [ActionParameter] UserRequest user)
     {
         var request = new BlackbirdAppRequest($"nests/{nest.NestId}/users/{user.UserId}", Method.Delete, Creds);

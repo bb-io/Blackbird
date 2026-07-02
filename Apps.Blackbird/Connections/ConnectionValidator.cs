@@ -11,15 +11,26 @@ public class ConnectionValidator: IConnectionValidator
         IEnumerable<AuthenticationCredentialsProvider> authenticationCredentialsProviders,
         CancellationToken cancellationToken)
     {
-        var creds = authenticationCredentialsProviders.ToArray();
-        var client = new BlackbirdAppClient(creds);
-
-        var request = new BlackbirdAppRequest("/users", Method.Get, creds);
-        await client.ExecuteWithErrorHandling(request);
-        
-        return new()
+        try
         {
-            IsValid = true
-        };
+            var creds = authenticationCredentialsProviders.ToArray();
+            var client = new BlackbirdAppClient(creds);
+
+            var request = new BlackbirdAppRequest("/users", Method.Get, creds);
+            await client.ExecuteWithErrorHandling(request);
+
+            return new()
+            {
+                IsValid = true
+            };
+        }
+        catch (Exception ex) {
+            return new()
+            {
+                IsValid = false,
+                Message = ex.Message,
+            };
+        }
+        
     }
 }
