@@ -1,8 +1,10 @@
 using Apps.Blackbird.Api;
 using Apps.Blackbird.Invocables;
 using Apps.Blackbird.Models.Entities;
+using Apps.Blackbird.Models.Events;
 using Apps.Blackbird.Models.Request.Birds;
 using Apps.Blackbird.Models.Request.Nests;
+using Apps.Blackbird.Models.Response;
 using Apps.Blackbird.Models.Response.Birds;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Actions;
@@ -13,14 +15,14 @@ using RestSharp;
 
 namespace Apps.Blackbird.Actions;
 
-[ActionList]
+[ActionList("Birds")]
 public class BirdActions : BlackbirdAppInvocable
 {
     public BirdActions(InvocationContext invocationContext) : base(invocationContext)
     {
     }
 
-    [Action("Search birds", Description = "Search for birds of the specific nest")]
+    [Action("Search Birds", Description = "Search Birds in a specific Nest")]
     public async Task<ListBirdsResponse> ListBirds([ActionParameter] NestRequest nest,
         [ActionParameter] ListBirdsRequest input)
     {
@@ -34,13 +36,23 @@ public class BirdActions : BlackbirdAppInvocable
         };
     }
 
-    [Action("Get bird", Description = "Get details of a specific tenant bird")]
+    [Action("Get Bird", Description = "Get details of a specific Bird")]
     public Task<BirdEntity> GetBird([ActionParameter] BirdRequest bird)
     {
-        return  GetBirdDetails(bird.NestId, bird.BirdId);
-    }   
-    
-    [Action("Start bird", Description = "Start specific published bird")]
+        return GetBirdDetails(bird.NestId, bird.BirdId);
+    }
+
+    [Action("Get Bird logs", Description = "Get logs for a specific Bird")]
+    public async Task<LogResponse<BirdEvent>> GetBirdLogs([ActionParameter] BirdRequest bird)
+    {
+        var request = new BlackbirdAppRequest($"nests/{bird.NestId}/birds/{bird.BirdId}/logs", Method.Get, Creds);
+        request.AddQueryParameter("pageSize", 100);
+        var response = await Client.ExecuteWithErrorHandling<PaginatedResponse<BirdEvent>>(request);
+
+        return new(response);
+    }
+
+    [Action("Fly Bird", Description = "Start a Flight for a published manual Bird")]
     public async Task StartBird([ActionParameter] StartBirdRequest bird)
     {
         var birdDetails = await GetBirdDetails(bird.NestId, bird.BirdId);

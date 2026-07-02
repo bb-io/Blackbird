@@ -6,7 +6,7 @@ Blackbird is the new automation backbone for the language technology industry. B
 
 <!-- begin docs -->
 
-This is the Blackbird Service API app for Blackbird. We can hear you thinking, isn't that a bit too Blackbird-ception? On the contrary! With the Blackbird Service API app you can orchestrate workflows that involve Blackbird itself. Common use cases are flight logging, error handling and user management.
+This is the Blackbird Service API app for Blackbird. We can hear you thinking, isn't that a bit too Blackbird-ception? On the contrary! With the Blackbird Service API app you can orchestrate workflows that involve Blackbird itself. Common use cases are Flight logging, error handling and user management.
 
 With the Blackbird app you can connect to _any_ Blackbird instance independent of hosted environment or organization. This means that you are not limited to your own organization.
 
@@ -30,7 +30,7 @@ Before you can connect you need to make sure that:
 1. Navigate to apps and search for Blackbird. Select the Blackbird app.
 2. Click _Add connection_
 3. Give your connection a name.
-4. Under Instance, select which instance of Blackbird you are using F.e. Europe (de-1) (_https://de-1.blackbird.io_).
+4. Under Instance, select which instance of Blackbird you are using, for example Europe (eu-1) (_https://eu-1.blackbird.io_).
 5. Under API token, fill in the API token you have just created.
 6. Click _Connect_.
 
@@ -38,51 +38,68 @@ Before you can connect you need to make sure that:
 
 ## Actions
 
+### Admin
+- **Get latest notifications** Get the latest notifications across all Nests
+
 ### Users
-- **Search users** returns all the users of the connected organization.
-- **Get user** returns information about a particular user.
-- **Add user to nest** adds the user to a nest.
-- **Remove user from nest** removed the user from said nest.
+- **Search users** Search all users
+- **Get user** Get details of a specific user
 
 ### Nests
-- **Search nests** returns all the nests of the connected organization.
-- **Get nest** returns information about a particular nest.
+- **Search Nests** Search all Nests
+- **Get Nest** Get details of a specific Nest
+- **Add user to Nest** Add a user to a specific Nest
+- **Remove user from Nest** Remove a user from a specific Nest
 
 ### Birds
-- **Search birds** returns all the birds inside a particular nest. You can optionally filter by the bird status and the trigger type.
-- **Get bird** returns information about a particular bird.
-- **Start bird** starts a new flight of this bird. Note: this only works for birds with manual triggers at the moment.
+- **Search Birds** Search Birds in a specific Nest
+    Advanced settings:
+  - **Trigger type**: Filter Birds by trigger type.
+  - **Status**: Filter Birds by status.
+- **Get Bird** Get details of a specific Bird
+- **Get Bird logs** Get logs for a specific Bird
+- **Fly Bird** Start a Flight for a published manual Bird
 
 ### Flights
-- **Search flights** returns all the flights of a particular bird. You can optionally filter for flights within a specific time frame. You can also filter by flight status.
-- **Get flight** returns information about a particular flight.
+- **Search Flights** Search Flights for a specific Bird
+    Advanced settings:
+  - **Minimum start date**: Filter Flights that started on or after this date.
+  - **Maximum start date**: Filter Flights that started on or before this date.
+- **Get Flight** Get details of a specific Flight
+- **Get Flight Logs** Get logs for a specific Flight
 
 ## Events
 
 ### Birds
-- **On bird activated** is triggered when a bird is activated (status changed from _suspended_ to _active_)
-- **On bird published** is triggered when a new version of a bird is published
-- **On bird suspended** is triggered when a bird is suspended (status changed from _active_ to _suspended_)
+- **On Bird activated** On a Bird activated
+    Advanced settings:
+  - **Nest ID**: Limit events to a specific Nest.
+- **On Bird published** On a Bird published
+- **On Bird suspended** On a Bird suspended
 
 ### Flights
-- **On flight started** is triggered when a flight has started.
-- **On flight succeeded** is triggered when a flight completes succesfully.
-- **On flight failed** is triggered when a flight failed. See example below.
-
-With bird and flight events you can optionally select the nest you want to watch. Note that bird and flight events cannot trigger themselves. You therefore don't have to worry about infinite loops.
+- **On Flight started** On a Flight started
+    Advanced settings:
+  - **Bird IDs**: Limit events to specific Birds.
+  - **Bird status**: Limit events to Birds with a specific status.
+- **On Flight succeeded** On a Flight succeeded
+- **On Flight failed** On a Flight failed
 
 ### Nests
-- **On nest created** is triggered when a new nest is created
-- **On nest deleted** is triggered when a nest is deleted
-- **On user added to nest** is triggered when a user is added to a nest.
-- **On user removed from nest** is triggered when a user is removed from a nest.
+- **On Nest created** On a Nest created
+- **On Nest deleted** On a Nest deleted
+- **On user added to Nest** On a user added to a Nest
+- **On user removed from Nest** On a user removed from a Nest
+
+### Notifications
+- **On Notification received** On a notification received
 
 ## Examples
 
 ### Error handling
 ![1721141187211](image/README/1721141187211.png)
 
-This incredibly simple bird will send a notification in Slack when any flight fails. This can be useful for alerting people about possible issues. An alternative, or suplementary action to Slack would be logging a ticket in f.e. Jira.
+This incredibly simple Bird will send a notification in Slack when any Flight fails. This can be useful for alerting people about possible issues. An alternative, or suplementary action to Slack would be logging a ticket in f.e. Jira.
 
 ## Feedback
 

@@ -10,14 +10,14 @@ using RestSharp;
 
 namespace Apps.Blackbird.Actions;
 
-[ActionList]
+[ActionList("Users")]
 public class UserActions : BlackbirdAppInvocable
 {
     public UserActions(InvocationContext invocationContext) : base(invocationContext)
     {
     }
 
-    [Action("Search users", Description = "Search for users of the tenant")]
+    [Action("Search users", Description = "Search all users")]
     public async Task<ListUsersResponse> ListUsers()
     {
         var request = new BlackbirdAppRequest("users", Method.Get, Creds);
@@ -29,7 +29,7 @@ public class UserActions : BlackbirdAppInvocable
         };
     }
     
-    [Action("Get user", Description = "Get details of a specific tenant user")]
+    [Action("Get user", Description = "Get details of a specific user")]
     public Task<UserEntity> GetUser([ActionParameter] UserRequest user)
     {
         var request = new BlackbirdAppRequest($"users/{user.UserId}", Method.Get, Creds);
