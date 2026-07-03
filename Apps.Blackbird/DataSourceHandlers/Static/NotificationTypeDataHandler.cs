@@ -10,8 +10,8 @@ public class NotificationTypeDataHandler : IStaticDataSourceItemHandler
         return new List<DataSourceItem> 
         {
             new DataSourceItem("all", "All"),
-            new DataSourceItem("ConnectionDisconnected", "Disconnected connections"),
-            new DataSourceItem("FlowDeactivated", "Bird deactivated")
+            new DataSourceItem("Disconnected", "Disconnected connections"),
+            new DataSourceItem("Deactivated", "Bird deactivated")
         };
     }
 }
