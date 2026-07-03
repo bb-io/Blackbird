@@ -13,6 +13,9 @@ public class NotificationPayload
     [Display("Nest ID")]
     public long WorkspaceId { get; set; }
 
+    [Display("Nest name")]
+    public string? NestName { get; set; }
+
     [Display("Bird ID")]
     public long? WorkflowId { get; set; }
 

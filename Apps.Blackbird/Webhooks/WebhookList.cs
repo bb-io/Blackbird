@@ -148,6 +148,9 @@ public class WebhookList : BlackbirdAppInvocable
             data.BirdName = bird?.Name;
         }
 
+        var nest = await LoadNestEntityById(data.WorkspaceId.ToString());
+        data.NestName = nest?.Name;
+
         return new WebhookResponse<NotificationPayload>
         {
             HttpResponseMessage = new(HttpStatusCode.OK),
