@@ -129,11 +129,11 @@ public class WebhookList : BlackbirdAppInvocable
         var payload = request.Body.ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(payload);
 
-        var data = JsonConvert.DeserializeObject<NotificationPayload>(payload)!;
+        var data = JsonConvert.DeserializeObject<BlackbirdWebhookPayload<NotificationPayload>>(payload)!;
 
         if (notificationType.EventType is not null && notificationType.EventType != "all")
         {
-            if (notificationType.EventType != data.EventType)
+            if (notificationType.EventType != data.Entity.EventType)
             {
                 return new WebhookResponse<NotificationPayload>
                 {
@@ -143,16 +143,16 @@ public class WebhookList : BlackbirdAppInvocable
             }
         }
 
-        if (data.WorkflowId is not null)
+        if (data.Entity.WorkflowId is not null)
         {
-            var bird = await LoadBirdEntityById(data.WorkflowId.ToString(), data.WorkspaceId.ToString());
-            data.BirdName = bird?.Name;
+            var bird = await LoadBirdEntityById(data.Entity.WorkflowId.ToString(), data.Entity.WorkspaceId.ToString());
+            data.Entity.BirdName = bird?.Name;
         }
 
         return new WebhookResponse<NotificationPayload>
         {
             HttpResponseMessage = new(HttpStatusCode.OK),
-            Result = data
+            Result = data.Entity
         };
     }
 
