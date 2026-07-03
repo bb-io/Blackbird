@@ -21,6 +21,9 @@ public class Notification
     [Display("Entity type")]
     public string EntityType { get; set; }
 
+    [Display("Event type")]
+    public string EventType { get; set; }
+
     [Display("Seen")]
     public bool? Seen { get; set; }
 

@@ -124,12 +124,24 @@ public class WebhookList : BlackbirdAppInvocable
     }
 
     [Webhook("On Notification received", typeof(NotificationCreatedWebhookHandler), Description = "On a notification received")]
-    public async Task<WebhookResponse<Notification>> OnNotificationReceived(WebhookRequest request)
+    public async Task<WebhookResponse<Notification>> OnNotificationReceived(WebhookRequest request, [WebhookParameter] NotificationTypeRequest notificationType)
     {
         var payload = request.Body.ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(payload);
 
         var data = JsonConvert.DeserializeObject<BlackbirdWebhookPayload<Notification>>(payload)!;
+
+        if (notificationType.EventType is not null && notificationType.EventType != "all")
+        {
+            if (notificationType.EventType != data.Entity.EventType)
+            {
+                return new WebhookResponse<Notification>
+                {
+                    HttpResponseMessage = new(HttpStatusCode.OK),
+                    ReceivedWebhookRequestType = WebhookRequestType.Preflight
+                };
+            }
+        }
 
         return new WebhookResponse<Notification>
         {
