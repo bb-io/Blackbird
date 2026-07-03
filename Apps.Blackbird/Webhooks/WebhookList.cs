@@ -124,18 +124,18 @@ public class WebhookList : BlackbirdAppInvocable
     }
 
     [Webhook("On Notification received", typeof(NotificationCreatedWebhookHandler), Description = "On a notification received")]
-    public async Task<WebhookResponse<Notification>> OnNotificationReceived(WebhookRequest request, [WebhookParameter] NotificationTypeRequest notificationType)
+    public async Task<WebhookResponse<NotificationPayload>> OnNotificationReceived(WebhookRequest request, [WebhookParameter] NotificationTypeRequest notificationType)
     {
         var payload = request.Body.ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(payload);
 
-        var data = JsonConvert.DeserializeObject<BlackbirdWebhookPayload<Notification>>(payload)!;
+        var data = JsonConvert.DeserializeObject<NotificationPayload>(payload)!;
 
         if (notificationType.EventType is not null && notificationType.EventType != "all")
         {
-            if (notificationType.EventType != data.Entity.EventType)
+            if (notificationType.EventType != data.EventType)
             {
-                return new WebhookResponse<Notification>
+                return new WebhookResponse<NotificationPayload>
                 {
                     HttpResponseMessage = new(HttpStatusCode.OK),
                     ReceivedWebhookRequestType = WebhookRequestType.Preflight
@@ -143,10 +143,16 @@ public class WebhookList : BlackbirdAppInvocable
             }
         }
 
-        return new WebhookResponse<Notification>
+        if (data.WorkflowId is not null)
+        {
+            var bird = await LoadBirdEntityById(data.WorkflowId.ToString(), data.WorkspaceId.ToString());
+            data.BirdName = bird?.Name;
+        }
+
+        return new WebhookResponse<NotificationPayload>
         {
             HttpResponseMessage = new(HttpStatusCode.OK),
-            Result = data?.Entity
+            Result = data
         };
     }
 
