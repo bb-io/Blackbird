@@ -19,7 +19,7 @@ public class NestActions : BlackbirdAppInvocable
     {
     }
 
-    [Action("Search Nests", Description = "Search all Nests")]
+    [Action("Search Nests", Description = "Searches all nests")]
     public async Task<ListNestsResponse> ListNests()
     {
         var request = new BlackbirdAppRequest("nests", Method.Get, Creds);
@@ -31,14 +31,14 @@ public class NestActions : BlackbirdAppInvocable
         };
     }
 
-    [Action("Get Nest", Description = "Get details of a specific Nest")]
+    [Action("Get Nest", Description = "Gets details about a specific nest")]
     public Task<NestEntity> GetNest([ActionParameter] NestRequest nest)
     {
         var request = new BlackbirdAppRequest($"nests/{nest.NestId}", Method.Get, Creds);
         return Client.ExecuteWithErrorHandling<NestEntity>(request);
     }
 
-    [Action("Add user to Nest", Description = "Add a user to a specific Nest")]
+    [Action("Add user to Nest", Description = "Adds a user to a specific nest")]
     public Task AddUserToNest([ActionParameter] NestRequest nest, [ActionParameter] UserRequest user)
     {
         var request = new BlackbirdAppRequest($"nests/{nest.NestId}/users", Method.Put, Creds)
@@ -49,7 +49,7 @@ public class NestActions : BlackbirdAppInvocable
         return Client.ExecuteWithErrorHandling(request);
     }
 
-    [Action("Remove user from Nest", Description = "Remove a user from a specific Nest")]
+    [Action("Remove user from Nest", Description = "Removes a user from a specific nest")]
     public Task RemoveUserFromNest([ActionParameter] NestRequest nest, [ActionParameter] UserRequest user)
     {
         var request = new BlackbirdAppRequest($"nests/{nest.NestId}/users/{user.UserId}", Method.Delete, Creds);

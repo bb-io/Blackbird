@@ -17,7 +17,7 @@ public class UserActions : BlackbirdAppInvocable
     {
     }
 
-    [Action("Search users", Description = "Search all users")]
+    [Action("Search users", Description = "Searches all users")]
     public async Task<ListUsersResponse> ListUsers()
     {
         var request = new BlackbirdAppRequest("users", Method.Get, Creds);
@@ -29,7 +29,7 @@ public class UserActions : BlackbirdAppInvocable
         };
     }
     
-    [Action("Get user", Description = "Get details of a specific user")]
+    [Action("Get user", Description = "Gets details about a specific user")]
     public Task<UserEntity> GetUser([ActionParameter] UserRequest user)
     {
         var request = new BlackbirdAppRequest($"users/{user.UserId}", Method.Get, Creds);

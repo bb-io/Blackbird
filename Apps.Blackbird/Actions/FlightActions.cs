@@ -8,6 +8,7 @@ using Apps.Blackbird.Models.Response;
 using Apps.Blackbird.Models.Response.Flights;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Actions;
+using Blackbird.Applications.Sdk.Common.Exceptions;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.Sdk.Utils.Extensions.String;
 using RestSharp;
@@ -22,7 +23,7 @@ public class FlightActions : BlackbirdAppInvocable
     }
 
 
-    [Action("Search Flights", Description = "Search Flights for a specific Bird")]
+    [Action("Search Flights", Description = "Searches for flights belonging to a specific bird")]
     public async Task<ListFlightsResponse> ListFlights([ActionParameter] BirdRequest bird,
         [ActionParameter] ListFlightsRequest input)
     {
@@ -36,7 +37,33 @@ public class FlightActions : BlackbirdAppInvocable
         };
     }
 
-    [Action("Get Flight", Description = "Get details of a specific Flight")]
+    [Action("Check for other active Flights", Description = "Checks whether the current bird has other active flights and outputs their IDs")]
+    public async Task<OtherActiveFlightsResponse> CheckForOtherActiveFlights()
+    {
+        var nestId = InvocationContext.Workspace?.Id.ToString();
+        var birdId = InvocationContext.Bird?.Id.ToString();
+        var flightId = InvocationContext.Flight?.Id;
+
+        if (nestId is null || birdId is null || flightId is null)
+            throw new PluginApplicationException("Current Nest, Bird, and Flight context is required.");
+
+        var response = await ListFlights(
+            new BirdRequest { NestId = nestId, BirdId = birdId },
+            new ListFlightsRequest { Status = "active" });
+
+        var otherFlightIds = response.Flights
+            .Where(flight => !string.Equals(flight.Id, flightId, StringComparison.OrdinalIgnoreCase))
+            .Select(flight => flight.Id)
+            .ToArray();
+
+        return new()
+        {
+            HasOtherFlights = otherFlightIds.Length > 0,
+            OtherFlightIds = otherFlightIds
+        };
+    }
+
+    [Action("Get Flight", Description = "Gets details about a specific flight")]
     public Task<FlightEntity> GetFlight([ActionParameter] FlightRequest flight)
     {
         var request = new BlackbirdAppRequest($"nests/{flight.NestId}/birds/{flight.BirdId}/flights/{flight.FlightId}",
@@ -44,7 +71,7 @@ public class FlightActions : BlackbirdAppInvocable
         return Client.ExecuteWithErrorHandling<FlightEntity>(request);
     }
 
-    [Action("Get Flight Logs", Description = "Get logs for a specific Flight")]
+    [Action("Get Flight Logs", Description = "Gets logs for a specific flight")]
     public async Task<LogResponse<FlightEvent>> GetFlightLogs([ActionParameter] FlightRequest flight)
     {
         var request = new BlackbirdAppRequest($"nests/{flight.NestId}/birds/{flight.BirdId}/flights/{flight.FlightId}/logs", Method.Get, Creds);

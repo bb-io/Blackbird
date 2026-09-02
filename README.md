@@ -39,60 +39,71 @@ Before you can connect you need to make sure that:
 ## Actions
 
 ### Admin
-- **Get latest notifications** Get the latest notifications across all Nests
+
+- **Get latest notifications** Gets the latest notifications across all nests
 
 ### Users
-- **Search users** Search all users
-- **Get user** Get details of a specific user
+
+- **Search users** Searches all users
+- **Get user** Gets details about a specific user
 
 ### Nests
-- **Search Nests** Search all Nests
-- **Get Nest** Get details of a specific Nest
-- **Add user to Nest** Add a user to a specific Nest
-- **Remove user from Nest** Remove a user from a specific Nest
+
+- **Search Nests** Searches all nests
+- **Get Nest** Gets details about a specific nest
+- **Add user to Nest** Adds a user to a specific nest
+- **Remove user from Nest** Removes a user from a specific nest
 
 ### Birds
-- **Search Birds** Search Birds in a specific Nest
+
+- **Search Birds** Searches for birds in a specific nest
     Advanced settings:
-  - **Trigger type**: Filter Birds by trigger type.
-  - **Status**: Filter Birds by status.
-- **Get Bird** Get details of a specific Bird
-- **Get Bird logs** Get logs for a specific Bird
-- **Fly Bird** Start a Flight for a published manual Bird
+  - **Trigger type**: Filter birds by trigger type.
+  - **Status**: Filter birds by status.
+- **Get Bird** Gets details about a specific bird
+- **Get Bird logs** Gets logs for a specific bird
+- **Fly Bird** Starts a flight for a published bird with a manual trigger
 
 ### Flights
-- **Search Flights** Search Flights for a specific Bird
+
+- **Search Flights** Searches for flights belonging to a specific bird
     Advanced settings:
-  - **Minimum start date**: Filter Flights that started on or after this date.
-  - **Maximum start date**: Filter Flights that started on or before this date.
-- **Get Flight** Get details of a specific Flight
-- **Get Flight Logs** Get logs for a specific Flight
+  - **Minimum start date**: Filter flights that started on or after this date.
+  - **Maximum start date**: Filter flights that started on or before this date.
+- **Check for other active Flights** Checks whether the current bird has other active flights and outputs their IDs
+- **Get Flight** Gets details about a specific flight
+- **Get Flight Logs** Gets logs for a specific flight
 
 ## Events
 
 ### Birds
-- **On Bird activated** On a Bird activated
-    Advanced settings:
-  - **Nest ID**: Limit events to a specific Nest.
-- **On Bird published** On a Bird published
-- **On Bird suspended** On a Bird suspended
+
+- **On Bird activated** On a bird being activated
+- **On Bird published** On a bird being published
+- **On Bird suspended** On a bird being suspended
 
 ### Flights
-- **On Flight started** On a Flight started
+
+- **On Flight started** On a flight being started
     Advanced settings:
-  - **Bird IDs**: Limit events to specific Birds.
-  - **Bird status**: Limit events to Birds with a specific status.
-- **On Flight succeeded** On a Flight succeeded
-- **On Flight failed** On a Flight failed
+  - **Nest ID**: Limit events to flights in a specific nest.
+  - **Bird IDs**: Limit events to specific birds.
+  - **Bird status**: Limit events to flights whose birds have a specific status.
+- **On Flight succeeded** On a flight succeeding
+- **On Flight failed** On a flight failing
 
 ### Nests
-- **On Nest created** On a Nest created
-- **On Nest deleted** On a Nest deleted
-- **On user added to Nest** On a user added to a Nest
-- **On user removed from Nest** On a user removed from a Nest
+
+- **On Nest created** On a nest being created
+- **On Nest deleted** On a nest being deleted
+- **On user added to Nest** On a user being added to a nest
+- **On user removed from Nest** On a user being removed from a nest
 
 ### Notifications
-- **On Notification received** On a notification received
+
+- **On Notification received** On a notification being received
+    Advanced settings:
+  - **Notification type**: Limit events to a specific notification type.
 
 ## Examples
 
