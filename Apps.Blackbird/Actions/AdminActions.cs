@@ -16,7 +16,7 @@ public class AdminActions : BlackbirdAppInvocable
     }
 
 
-    [Action("Get latest notifications", Description = "Gets the latest notifications across all nests")]
+    [Action("Search notifications", Description = "Gets the latest notifications across all nests")]
     public async Task<LogResponse<Notification>> GetNotifications()
     {
         var endpoint = $"notifications";

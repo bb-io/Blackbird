@@ -37,7 +37,7 @@ public class FlightActions : BlackbirdAppInvocable
         };
     }
 
-    [Action("Check for other active Flights", Description = "Checks whether the current bird has other active flights and outputs their IDs")]
+    [Action("Search other active flights", Description = "Checks whether the current bird has other active flights and outputs their IDs")]
     public async Task<OtherActiveFlightsResponse> CheckForOtherActiveFlights()
     {
         var nestId = InvocationContext.Workspace?.Id.ToString();

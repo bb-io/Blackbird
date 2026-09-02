@@ -40,7 +40,7 @@ Before you can connect you need to make sure that:
 
 ### Admin
 
-- **Get latest notifications** Gets the latest notifications across all nests
+- **Search notifications** Gets the latest notifications across all nests
 
 ### Users
 
@@ -49,20 +49,20 @@ Before you can connect you need to make sure that:
 
 ### Nests
 
-- **Search Nests** Searches all nests
-- **Get Nest** Gets details about a specific nest
-- **Add user to Nest** Adds a user to a specific nest
-- **Remove user from Nest** Removes a user from a specific nest
+- **Search nests** Searches all nests
+- **Get nest** Gets details about a specific nest
+- **Update user in nest** Adds a user to a specific nest
+- **Delete user from nest** Removes a user from a specific nest
 
 ### Birds
 
-- **Search Birds** Searches for birds in a specific nest
+- **Search birds** Searches for birds in a specific nest
     Advanced settings:
   - **Trigger type**: Filter birds by trigger type.
   - **Status**: Filter birds by status.
-- **Get Bird** Gets details about a specific bird
-- **Get Bird logs** Gets logs for a specific bird
-- **Fly Bird** Starts a flight for a published bird with a manual trigger
+- **Get bird** Gets details about a specific bird
+- **Search bird logs** Gets logs for a specific bird
+- **Fly bird** Starts a flight for a published bird with a manual trigger
 
 ### Flights
 
@@ -70,7 +70,7 @@ Before you can connect you need to make sure that:
     Advanced settings:
   - **Minimum start date**: Filter flights that started on or after this date.
   - **Maximum start date**: Filter flights that started on or before this date.
-- **Check for other active Flights** Checks whether the current bird has other active flights and outputs their IDs
+- **Search other active flights** Checks whether the current bird has other active flights and outputs their IDs
 - **Get Flight** Gets details about a specific flight
 - **Get Flight Logs** Gets logs for a specific flight
 
